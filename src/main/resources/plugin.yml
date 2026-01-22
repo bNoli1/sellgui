@@ -1,0 +1,21 @@
+name: SellGUI
+version: 1.0
+main: me.quantum.sellgui.SellGUI
+api-version: 1.21
+description: Egy egyszerű SellGUI plugin Vault támogatással.
+author: bNoli1
+depend: [Vault]
+
+commands:
+  sell:
+    description: Megnyitja az eladó menüt.
+    usage: /sell
+  selladmin:
+    description: Adminisztrátori parancsok a SellGUI-hoz.
+    usage: /selladmin <reload|add|setbutton>
+    permission: sellgui.admin
+
+permissions:
+  sellgui.admin:
+    description: Lehetővé teszi az árak és a gomb szerkesztését.
+    default: op
