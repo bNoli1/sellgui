@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor {
 
@@ -47,7 +49,6 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
         getCommand("sell").setExecutor(this);
         getCommand("selladmin").setExecutor(this);
         getServer().getPluginManager().registerEvents(this, this);
-        getLogger().info("QuantumSell v1.3 sikeresen betoltve!");
     }
 
     private boolean setupEconomy() {
@@ -117,7 +118,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 loadData();
-                player.sendMessage(color("&a&l[!] &aBeallitasok es arak frissitve!"));
+                player.sendMessage(color("&a&l[!] &aHEX szinek es adatok frissitve!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                 return true;
             }
@@ -200,22 +201,16 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
         if (title.contains("Admin Lista")) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null) return;
-            
             int currentPage = playerPages.getOrDefault(player.getUniqueId(), 0);
             int slot = event.getRawSlot();
 
             if (slot == 48 && event.getCurrentItem().getType() == Material.ARROW) {
                 playerPages.put(player.getUniqueId(), currentPage - 1);
                 openAdminList(player, currentPage - 1);
-                return;
-            }
-            if (slot == 50 && event.getCurrentItem().getType() == Material.ARROW) {
+            } else if (slot == 50 && event.getCurrentItem().getType() == Material.ARROW) {
                 playerPages.put(player.getUniqueId(), currentPage + 1);
                 openAdminList(player, currentPage + 1);
-                return;
-            }
-
-            if (slot < 45 && (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT || event.getClick() == ClickType.MIDDLE)) {
+            } else if (slot < 45 && (event.getClick().isShiftClick() || event.getClick() == ClickType.MIDDLE)) {
                 int indexInList = (currentPage * 45) + slot;
                 if (indexInList < sellableItems.size()) {
                     sellableItems.remove(indexInList);
@@ -276,7 +271,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (econ != null) {
                 econ.depositPlayer(player, finalAmt);
                 player.sendMessage(getMsg("messages.prefix", "&7[&2Sell&7] ") + getMsg("messages.sell-success", "&aEladva: &f%amount%$").replace("%amount%", String.format("%.2f", finalAmt)));
-                player.sendTitle(color("&6&l+ " + String.format("%.2f", finalAmt) + "$"), color("&7Sikeres eladas!"), 10, 40, 10);
+                player.sendTitle(color("&#66ff66+ " + String.format("%.2f", finalAmt) + "$"), getMsg("messages.sell-title-sub", "&7Sikeres eladas!"), 10, 40, 10);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1.2f);
             }
             player.closeInventory();
@@ -302,6 +297,17 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
     }
 
     private String color(String s) {
-        return s == null ? "" : s.replace("&", "§");
+        if (s == null) return "";
+        Pattern hexPattern = Pattern.compile("&#([A-Fa-f0-9]{6})");
+        Matcher matcher = hexPattern.matcher(s);
+        StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            String color = matcher.group(1);
+            StringBuilder replacement = new StringBuilder("§x");
+            for (char c : color.toCharArray()) replacement.append('§').append(c);
+            matcher.appendReplacement(buffer, replacement.toString());
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString().replace("&", "§");
     }
 }
