@@ -49,6 +49,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
         getCommand("sell").setExecutor(this);
         getCommand("selladmin").setExecutor(this);
         getServer().getPluginManager().registerEvents(this, this);
+        getLogger().info("QuantumSell v1.5 betöltve!");
     }
 
     private boolean setupEconomy() {
@@ -98,7 +99,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 loadData();
-                sender.sendMessage("§a[QuantumSell] Adatok ujratoltve!");
+                sender.sendMessage("§a[QuantumSell] Adatok újratöltve!");
             }
             return true;
         }
@@ -118,7 +119,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 loadData();
-                player.sendMessage(color("&a&l[!] &aHEX szinek es adatok frissitve!"));
+                player.sendMessage(color("&a&l[!] &aKonfiguráció és árak frissítve!"));
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                 return true;
             }
@@ -133,22 +134,15 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
                     sellableItems.add(hand);
                     prices.add(price);
                     saveData();
-                    player.sendMessage(getMsg("messages.admin-add", "&aHozzaadva!").replace("%item%", hand.getType().name()).replace("%price%", String.valueOf(price)));
+                    player.sendMessage(getMsg("messages.admin-add", "&aHozzáadva!").replace("%item%", hand.getType().name()).replace("%price%", String.valueOf(price)));
                 } catch (Exception e) {
-                    player.sendMessage(color("&cHasznalat: /selladmin add [ar]"));
+                    player.sendMessage(color("&cHasználat: /selladmin add [ár]"));
                 }
                 return true;
             }
             if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
                 playerPages.put(player.getUniqueId(), 0);
                 openAdminList(player, 0);
-                return true;
-            }
-            if (args.length >= 1 && args[0].equalsIgnoreCase("wipe")) {
-                sellableItems.clear();
-                prices.clear();
-                saveData();
-                player.sendMessage(getMsg("messages.database-wipe", "&cAdatbazis torolve!"));
                 return true;
             }
         }
@@ -166,7 +160,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (meta != null) {
                 List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
                 lore.add("§8§m-----------------");
-                lore.add("§eAr: §f" + prices.get(i) + "$");
+                lore.add("§eÁr: §f" + prices.get(i) + "$");
                 lore.add(" ");
                 lore.add("§c§l[!] §7Shift + Kattintás");
                 lore.add("§7a tárgy törléséhez!");
@@ -223,7 +217,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             return;
         }
 
-        if (title.equals(getMsg("gui-settings.title", "&2&lEladas"))) {
+        if (title.equals(getMsg("gui-settings.title", "&2&lEladás"))) {
             if (event.getRawSlot() < 9) {
                 event.setCancelled(true);
                 if (event.getRawSlot() == 4) handleSell(player, event.getInventory());
@@ -232,7 +226,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
     }
 
     public void openSellGUI(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 45, getMsg("gui-settings.title", "&2&lEladas"));
+        Inventory inv = Bukkit.createInventory(null, 45, getMsg("gui-settings.title", "&2&lEladás"));
         ItemStack glass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = glass.getItemMeta();
         if (meta != null) { meta.setDisplayName(" "); glass.setItemMeta(meta); }
@@ -240,7 +234,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
         ItemStack button = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta bMeta = button.getItemMeta();
         if (bMeta != null) {
-            bMeta.setDisplayName(getMsg("gui-settings.button-name", "&a&lELADAS INDITASA"));
+            bMeta.setDisplayName(getMsg("gui-settings.button-name", "&a&lELADÁS INDÍTÁSA"));
             button.setItemMeta(bMeta);
         }
         inv.setItem(4, button);
@@ -267,11 +261,17 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
             if (player.hasPermission("sellgui.multiplier.gold")) mult = getConfig().getDouble("multipliers.gold", 1.75);
             else if (player.hasPermission("sellgui.multiplier.silver")) mult = getConfig().getDouble("multipliers.silver", 1.5);
             else if (player.hasPermission("sellgui.multiplier.bronze")) mult = getConfig().getDouble("multipliers.bronze", 1.25);
+            
             double finalAmt = total * mult;
             if (econ != null) {
                 econ.depositPlayer(player, finalAmt);
-                player.sendMessage(getMsg("messages.prefix", "&7[&2Sell&7] ") + getMsg("messages.sell-success", "&aEladva: &f%amount%$").replace("%amount%", String.format("%.2f", finalAmt)));
-                player.sendTitle(color("&#66ff66+ " + String.format("%.2f", finalAmt) + "$"), getMsg("messages.sell-title-sub", "&7Sikeres eladas!"), 10, 40, 10);
+                String successMsg = getMsg("messages.sell-success", "&aSikeres eladás: &f%amount%$ &7(%multiplier%x)")
+                        .replace("%amount%", String.format("%.2f", finalAmt))
+                        .replace("%multiplier%", String.valueOf(mult));
+                
+                player.sendMessage(getMsg("messages.prefix", "&7[&2Sell&7] ") + successMsg);
+                player.sendTitle(color("&#66ff66+ " + String.format("%.2f", finalAmt) + "$"), 
+                                color(getMsg("messages.sell-title-sub", "&7Szorzó: &e%multiplier%x").replace("%multiplier%", String.valueOf(mult))), 10, 40, 10);
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1.2f);
             }
             player.closeInventory();
@@ -283,7 +283,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (event.getView().getTitle().equals(getMsg("gui-settings.title", "&2&lEladas"))) {
+        if (event.getView().getTitle().equals(getMsg("gui-settings.title", "&2&lEladás"))) {
             for (int i = 9; i < 45; i++) {
                 ItemStack item = event.getInventory().getItem(i);
                 if (item != null) event.getPlayer().getInventory().addItem(item);
