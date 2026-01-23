@@ -1,30 +1,24 @@
-# SellGUI - Konfigurációs fájl
+# --- SellGUI Konfiguráció ---
 
-settings:
-  # Hangok listája: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-  sell-sound: "ENTITY_PLAYER_LEVELUP"
-  fail-sound: "ENTITY_VILLAGER_NO"
-  # Melyik slotban legyen az eladó gomb az első sorban (0-8 között)
-  button-slot: 4
+# A GUI (menü) beállításai
+gui-settings:
+	title: "&2&lEladás &7(Tedd be a cuccokat)"
+	button-name: "&a&lELADÁS INDÍTÁSA"
+	button-lore:
+		- "&7Kattints ide a bent lévő"
+		- "&7tárgyak eladásához!"
 
+# Rangokhoz kötött pénzszorzók (Jogosultság alapú)
+multipliers:
+	bronze: 1.25  # +25% extra pénz (sellgui.multiplier.bronze)
+	silver: 1.5   # +50% extra pénz (sellgui.multiplier.silver)
+	gold: 1.75    # +75% extra pénz (sellgui.multiplier.gold)
+
+# Üzenetek (Színkódok támogatottak: &)
 messages:
-  no-permission: "&7[&2SellGUI&7] &cNincs jogosultságod ehhez a művelethez!"
-  sell-success: "&7[&2SellGUI&7] &aSikeresen eladtál mindent &f%price% $ &aértékben!"
-  title: "&6+ %price% $"
-  subtitle: "&7Az összeg jóváírva!"
-  item-added: "&7[&2SellGUI&7] &aTárgy rögzítve az adatbázisba! Ár: &e%price% $"
-
-# Az eladó gomb kinézete (Alapértelmezett, ha még nem állítottad be játékon belül)
-button-item:
-  ==: org.bukkit.inventory.ItemStack
-  v: 3955
-  type: LIME_STAINED_GLASS_PANE
-  meta:
-    ==: ItemMeta
-    display-name: '{"text":"§a§lELADÁS INDÍTÁSA"}'
-    lore:
-    - '{"text":"§7Kattints ide a bent lévő"}'
-    - '{"text":"§7tárgyak eladásához!"}'
-
-# Az árak listája ide fog kerülni automatikusan a /selladmin add használatakor
-prices: {}
+	prefix: "&7[&2SellGUI&7] "
+	no-item: "&cNincs eladható tárgy a felületen!"
+	sell-success: "&aSikeresen eladtad a tárgyakat &f%amount%$ &aértékben!"
+	no-permission: "&cNincs jogod ehhez!"
+	admin-add: "&aTárgy rögzítve: &f%item% &7- &e%price%$"
+	database-wipe: "&4&lFIGYELEM! &cMinden elmentett ár törölve lett!"
