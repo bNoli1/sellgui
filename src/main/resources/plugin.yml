@@ -4,7 +4,7 @@ main: me.quantum.QuantumSell.QuantumSell
 api-version: 1.13
 depend: [Vault]
 commands:
-	sell:
-		description: Eladas GUI megnyitasa
-	selladmin:
-		description: Admin parancsok (add, wipe)
+  sell:
+    description: Eladás GUI megnyitása
+  selladmin:
+    description: Admin parancsok
