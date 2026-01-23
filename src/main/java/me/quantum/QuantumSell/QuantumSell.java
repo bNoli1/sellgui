@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellGUI extends JavaPlugin implements Listener, CommandExecutor {
+public class QuantumSell extends JavaPlugin ...
 
 	private Economy econ = null;
 	private final List<ItemStack> sellableItems = new ArrayList<>();
