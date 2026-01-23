@@ -31,7 +31,7 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 	public void onEnable() {
 		saveDefaultConfig();
 		if (!setupEconomy()) {
-			getLogger().severe("Vault nem talalhato!");
+			getLogger().severe("Vault vagy Economy plugin nem talalhato! A plugin leall.");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -64,6 +64,8 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 				player.sendMessage(color(config.getString("messages.prefix") + config.getString("messages.no-permission")));
 				return true;
 			}
+			
+			// ADD parancs
 			if (args.length >= 2 && args[0].equalsIgnoreCase("add")) {
 				ItemStack hand = player.getInventory().getItemInMainHand().clone();
 				if (hand.getType() == Material.AIR) {
@@ -79,13 +81,35 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 				} catch (NumberFormatException e) {
 					player.sendMessage("§cErvenytelen ar!");
 				}
-			} else if (args.length >= 1 && args[0].equalsIgnoreCase("wipe")) {
+			} 
+			// WIPE parancs
+			else if (args.length >= 1 && args[0].equalsIgnoreCase("wipe")) {
 				sellableItems.clear();
 				prices.clear();
 				player.sendMessage(color(config.getString("messages.prefix") + config.getString("messages.database-wipe")));
 			}
+			// LIST GUI parancs
+			else if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
+				openAdminList(player);
+			}
 		}
 		return true;
+	}
+
+	public void openAdminList(Player player) {
+		Inventory listGui = Bukkit.createInventory(null, 54, "§cAdmin Lista");
+		for (int i = 0; i < sellableItems.size(); i++) {
+			if (i >= 54) break;
+			ItemStack display = sellableItems.get(i).clone();
+			ItemMeta meta = display.getItemMeta();
+			List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+			lore.add("§8§m-----------------");
+			lore.add("§eAr: §f" + prices.get(i) + " $");
+			meta.setLore(lore);
+			display.setItemMeta(meta);
+			listGui.setItem(i, display);
+		}
+		player.openInventory(listGui);
 	}
 
 	public void openSellGUI(Player player) {
@@ -99,9 +123,10 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 		ItemStack button = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
 		ItemMeta bMeta = button.getItemMeta();
 		bMeta.setDisplayName(color(config.getString("gui-settings.button-name")));
-		List<String> lore = new ArrayList<>();
-		for (String s : config.getStringList("gui-settings.button-lore")) lore.add(color(s));
-		bMeta.setLore(lore);
+		List<String> lore = config.getStringList("gui-settings.button-lore");
+		List<String> coloredLore = new ArrayList<>();
+		for (String s : lore) coloredLore.add(color(s));
+		bMeta.setLore(coloredLore);
 		button.setItemMeta(bMeta);
 		inv.setItem(4, button);
 		player.openInventory(inv);
@@ -110,7 +135,12 @@ public class QuantumSell extends JavaPlugin implements Listener, CommandExecutor
 	@EventHandler
 	public void onClick(InventoryClickEvent event) {
 		FileConfiguration config = getConfig();
-		if (!event.getView().getTitle().equals(color(config.getString("gui-settings.title")))) return;
+		String title = event.getView().getTitle();
+		if (title.equals("§cAdmin Lista")) {
+			event.setCancelled(true);
+			return;
+		}
+		if (!title.equals(color(config.getString("gui-settings.title")))) return;
 		if (event.getRawSlot() < 9) {
 			event.setCancelled(true);
 			if (event.getRawSlot() == 4) {
