@@ -1,9 +1,9 @@
 gui-settings:
-  title: "&2&lEladás"
-  button-name: "&a&lELADÁS INDÍTÁSA"
+  # Példa HEX színre: &#ff55ff
+  title: "&#4eccf3&lEladó Felület"
+  button-name: "&#55ff55&lELADÁS INDÍTÁSA"
   button-lore:
-    - "&7Kattints ide a bent lévő"
-    - "&7tárgyak eladásához!"
+    - "&7Kattints ide az eladáshoz!"
 
 multipliers:
   bronze: 1.25
@@ -11,9 +11,10 @@ multipliers:
   gold: 1.75
 
 messages:
-  prefix: "&7[&2SellGUI&7] "
-  no-item: "&cNincs eladható tárgy a felületen!"
+  prefix: "&#4eccf3&l[QuantumSell] "
+  no-item: "&cNincs eladható tárgy!"
   sell-success: "&aSikeres eladás: &f%amount%$"
+  sell-title-sub: "&7A pénz jóváírva!"
   no-permission: "&cNincs jogod ehhez!"
   admin-add: "&aTárgy rögzítve: &f%item% &7- &e%price%$"
   database-wipe: "&cMinden elmentett ár törölve lett!"
