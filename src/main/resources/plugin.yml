@@ -1,6 +1,6 @@
 name: QuantumSell
 version: 1.0
-main: me.quantum.sellgui.QuantumSell
+main: me.quantum.QuantumSell.QuantumSell
 api-version: 1.13
 depend: [Vault]
 commands:
