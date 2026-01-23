@@ -1,24 +1,19 @@
-# --- SellGUI Konfiguráció --- #
-
-# A GUI (menü) beállításai
 gui-settings:
-	title: "&2&lEladás &7(Tedd be a cuccokat)"
-	button-name: "&a&lELADÁS INDÍTÁSA"
-	button-lore:
-		- "&7Kattints ide a bent lévő"
-		- "&7tárgyak eladásához!"
+  title: "&2&lEladás"
+  button-name: "&a&lELADÁS INDÍTÁSA"
+  button-lore:
+    - "&7Kattints ide a bent lévő"
+    - "&7tárgyak eladásához!"
 
-# Rangokhoz kötött pénzszorzók (Jogosultság alapú)
 multipliers:
-	bronze: 1.25  # +25% extra pénz (sellgui.multiplier.bronze)
-	silver: 1.5   # +50% extra pénz (sellgui.multiplier.silver)
-	gold: 1.75    # +75% extra pénz (sellgui.multiplier.gold)
+  bronze: 1.25
+  silver: 1.5
+  gold: 1.75
 
-# Üzenetek (Színkódok támogatottak: &)
 messages:
-	prefix: "&7[&2SellGUI&7] "
-	no-item: "&cNincs eladható tárgy a felületen!"
-	sell-success: "&aSikeresen eladtad a tárgyakat &f%amount%$ &aértékben!"
-	no-permission: "&cNincs jogod ehhez!"
-	admin-add: "&aTárgy rögzítve: &f%item% &7- &e%price%$"
-	database-wipe: "&4&lFIGYELEM! &cMinden elmentett ár törölve lett!"
+  prefix: "&7[&2SellGUI&7] "
+  no-item: "&cNincs eladható tárgy a felületen!"
+  sell-success: "&aSikeres eladás: &f%amount%$"
+  no-permission: "&cNincs jogod ehhez!"
+  admin-add: "&aTárgy rögzítve: &f%item% &7- &e%price%$"
+  database-wipe: "&cMinden elmentett ár törölve lett!"
