@@ -1,4 +1,4 @@
-package me.szerver.sellgui;
+package me.quantum.sellgui;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
