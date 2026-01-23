@@ -5,6 +5,7 @@ api-version: 1.13
 depend: [Vault]
 commands:
   sell:
-    description: Eladás GUI megnyitása
+    description: Eladási menü megnyitása.
   selladmin:
-    description: Admin parancsok
+    description: Adminisztrátori parancsok (add, list, wipe).
+    permission: sellgui.admin
