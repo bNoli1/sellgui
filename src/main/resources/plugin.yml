@@ -1,5 +1,5 @@
 name: QuantumSell
-version: 1.3
+version: 1.4
 main: me.quantum.QuantumSell.QuantumSell
 api-version: 1.13
 depend: [Vault]
@@ -7,6 +7,5 @@ commands:
   sell:
     description: Eladási menü megnyitása.
   selladmin:
-    description: Adminisztrátori parancsok (add, list, reload, wipe).
-    usage: /selladmin <add/list/reload/wipe>
+    description: Adminisztrátori parancsok.
     permission: sellgui.admin
